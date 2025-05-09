@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chatbot | Sentiment Analysis</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .typing-dots::after {
+      content: '...';
+      animation: dots 1.5s steps(3, end) infinite;
+    }
+
+    @keyframes dots {
+      0%, 20% { content: ''; }
+      40% { content: '.'; }
+      60% { content: '..'; }
+      80%, 100% { content: '...'; }
+    }
+    /* Hide scrollbar for WebKit browsers */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for Firefox */
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  </style>
+</head>
+<body class="relative h-screen overflow-hidden text-sm bg-gray-100">
+
+ <!-- Vanta Background -->
+<div id="vanta-bg" class="absolute top-0 left-0 w-full h-full -z-10"></div>
+
+<!-- Layout Wrapper -->
+<div class="flex h-full w-full">
+
+  <!-- Sidebar Toggle (visible on small screens) -->
+  <button id="sidebarToggle" class="md:hidden fixed top-4 left-4 z-30 bg-black text-white px-3 py-2 rounded focus:outline-none shadow">
+    ☰
+  </button>
+
+  <!-- Sidebar -->
+<aside id="sidebar" class="w-64 bg-black text-white flex flex-col justify-between p-4 border-r border-gray-700 z-20 transform md:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out fixed md:static h-full">
+  <div>
+    <h2 class="text-2xl font-bold mb-4">📊 Dashboard</h2>
+    <hr class="border-gray-600 mb-6" />
+    <nav class="flex flex-col gap-4 mt-2">
+      <a href="chat.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">💬 Chatbot Page</a>
+      <a href="upload.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">📹 Video Upload Page</a>
+      <a href="dashboard.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">📈 Sentiment & Emotion Trends</a>
+      <a href="transcript.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">📝 Transcript and Analysis</a>
+    </nav>  
+  </div>
+
+ <!-- Logout Button -->
+<div class="mt-6">
+  <a href="home.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition text-center block">🔓 Logout</a>
+</div>
+
+</aside>
+
+
+  <!-- Main Content Area -->
+  <div class="flex flex-col flex-1 h-full ml-0 ">
+
+    <!-- Header -->
+    <header class="bg-black text-white shadow p-4 border-b border-gray-800 z-10 pl-14 md:pl-4">
+        <h1 class="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold">
+          💬 Chatbot – Sentiment Analysis on Government Policies
+        </h1>
+      </header>
+      
+
+    <!-- Chat Section -->
+    <main class="flex-1 overflow-y-auto p-4 md:px-6 flex flex-col space-y-4 max-w-2xl w-full mx-auto h-0 grow scrollbar-hide">
+        <div id="chatWindow" class="flex flex-col space-y-4"></div>
+      </main>
+      
+
+    <!-- Input Section -->
+    <footer class="bg-black backdrop-blur p-4 border-t border-gray-800 z-10">
+      <form onsubmit="handleUserInput(event)" class="max-w-2xl mx-auto flex items-center gap-2">
+        <input
+          id="userInput"
+          type="text"
+          placeholder="Ask something..."
+          class="flex-1 px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        />
+        <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition">
+          Send
+        </button>
+      </form>
+    </footer>
+  </div>
+</div>
+
+<!-- Sidebar Toggle Script -->
+<script>
+  const sidebar = document.getElementById("sidebar");
+  const toggleBtn = document.getElementById("sidebarToggle");
+
+  toggleBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("-translate-x-full");
+  });
+</script>
+
+
+  <!-- JS Logic -->
+  <script>
+    const chatWindow = document.getElementById("chatWindow");
+
+    function appendMessage(role, text, source = "", sentiment = "", confidence = "") {
+      const wrapper = document.createElement("div");
+      wrapper.className = `fade-in mb-4 flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = `max-w-[75%] p-4 rounded-xl shadow bg-white text-black`;
+
+
+
+      const content = document.createElement("div");
+      content.className = "space-y-2";
+
+      const textNode = document.createElement("p");
+      textNode.textContent = text;
+      content.appendChild(textNode);
+
+      if (role === 'bot' && sentiment) {
+        const tag = document.createElement("div");
+        tag.className = `inline-block text-xs px-2 py-1 rounded-full ${
+          sentiment === 'Positive'
+            ? 'bg-green-100 text-green-700'
+            : sentiment === 'Negative'
+            ? 'bg-red-100 text-red-700'
+            : 'bg-gray-200 text-gray-700'
+        }`;
+        tag.textContent = `${sentiment} ${confidence ? `• ${confidence}%` : ''}`;
+        content.appendChild(tag);
+      }
+
+      if (role === 'bot' && source) {
+        const sourceBox = document.createElement("div");
+        sourceBox.className = "mt-2 text-xs bg-gray-100 border border-gray-300 rounded p-3";
+        sourceBox.innerHTML = `<strong>Source Context:</strong><br/>${source}`;
+        content.appendChild(sourceBox);
+      }
+
+      bubble.appendChild(content);
+      wrapper.appendChild(bubble);
+      chatWindow.appendChild(wrapper);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function handleUserInput(event) {
+      event.preventDefault();
+      const input = document.getElementById("userInput");
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      appendMessage("user", userText);
+      input.value = "";
+
+      // Typing indicator
+      const loading = document.createElement("div");
+      loading.className = "fade-in mb-4 flex justify-start";
+      loading.id = "typing-indicator";
+      loading.innerHTML = `<div class="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl rounded-bl-none text-sm">AI is typing<span class="typing-dots"></span></div>`;
+      chatWindow.appendChild(loading);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      // Simulated bot reply
+      setTimeout(() => {
+        document.getElementById("typing-indicator").remove();
+        const sampleBotReply = "This policy was received positively due to its impact on the middle class.";
+        const sourceChunk = "The Times: 'The policy has been lauded for improving household savings...'";
+        const sentiment = "Positive";
+        const confidence = "93";
+        appendMessage("bot", sampleBotReply, sourceChunk, sentiment, confidence);
+      }, 1000);
+    }
+  </script>
+
+  <!-- Vanta + Three.js Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+  <script>
+    VANTA.GLOBE({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00,
+      color: 0x0066ff,
+      backgroundColor: 0x000000
+    });
+  </script>
+</body>
+</html>

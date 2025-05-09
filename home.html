@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home | Sentiment Analysis</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .fade-in {
+      animation: fadeIn 1.2s ease-in-out both;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="relative min-h-screen overflow-hidden">
+
+  <!-- Vanta Background -->
+  <div id="vanta-bg" class="absolute inset-0 -z-10"></div>
+
+  <!-- Main Container -->
+  <div class="flex items-center justify-center min-h-screen px-4 fade-in">
+    <div class="bg-white bg-opacity-90 shadow-xl rounded-xl w-full max-w-6xl flex flex-col md:flex-row overflow-hidden">
+      
+      <!-- Left Side - App Info -->
+      <div class="bg-blue-800 text-white p-8 md:w-1/2 flex flex-col justify-center">
+        <h2 class="text-3xl font-bold mb-6">Sentiment Analysis on Government Policies</h2>
+        <div class="space-y-4">
+          <div class="bg-blue-700 p-4 rounded-lg">
+            <p class="font-semibold">🎥 Video to Text Transcription</p>
+            <p class="text-sm">Extracts text from speeches and interviews</p>
+          </div>
+          <div class="bg-blue-700 p-4 rounded-lg">
+            <p class="font-semibold">📊 Sentiment Classification</p>
+            <p class="text-sm">Detects public/media sentiment: Positive, Neutral, or Negative</p>
+          </div>
+          <div class="bg-blue-700 p-4 rounded-lg">
+            <p class="font-semibold">📚 RAG + RLHF</p>
+            <p class="text-sm">Improves accuracy with retrieval & human feedback</p>
+          </div>
+          <div class="bg-blue-700 p-4 rounded-lg">
+            <p class="font-semibold">💬 Chatbot Access</p>
+            <p class="text-sm">Ask about any policy or speech and get instant insights</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side - Sign In / Sign Up -->
+      <div class="p-8 md:w-1/2">
+        <div class="flex space-x-6 mb-6">
+          <button onclick="showForm('login')" class="text-blue-800 font-semibold border-b-2 border-blue-800 pb-1" id="loginTab">Login</button>
+          <button onclick="showForm('signup')" class="text-gray-500 font-semibold pb-1" id="signupTab">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+          <input type="email" placeholder="Email" required class="w-full border px-4 py-2 rounded" />
+          <input type="password" placeholder="Password" required class="w-full border px-4 py-2 rounded" />
+          <button type="submit" class="bg-blue-800 text-white w-full py-2 rounded hover:bg-blue-900">Login</button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signupForm" onsubmit="handleSignup(event)" class="space-y-4 hidden">
+          <input type="text" placeholder="Name" required class="w-full border px-4 py-2 rounded" />
+          <input type="email" placeholder="Email" required class="w-full border px-4 py-2 rounded" />
+          <input type="password" placeholder="Password" required class="w-full border px-4 py-2 rounded" />
+          <button type="submit" class="bg-blue-800 text-white w-full py-2 rounded hover:bg-blue-900">Sign Up</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Vanta JS and Globe Background -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+  <script>
+    VANTA.GLOBE({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00,
+      color: 0x0066ff,
+      backgroundColor: 0x000000
+    });
+  </script>
+
+  <!-- JS for Tabs and Forms -->
+  <script>
+    function showForm(form) {
+      const loginTab = document.getElementById("loginTab");
+      const signupTab = document.getElementById("signupTab");
+      const loginForm = document.getElementById("loginForm");
+      const signupForm = document.getElementById("signupForm");
+
+      if (form === 'login') {
+        loginTab.classList.add('border-b-2', 'border-blue-800', 'text-blue-800');
+        signupTab.classList.remove('border-b-2', 'border-blue-800');
+        signupTab.classList.add('text-gray-500');
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+      } else {
+        signupTab.classList.add('border-b-2', 'border-blue-800', 'text-blue-800');
+        loginTab.classList.remove('border-b-2', 'border-blue-800');
+        loginTab.classList.add('text-gray-500');
+        signupForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+      }
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      alert('Logged in successfully');
+      window.location.href = "chat.html";
+    }
+
+    function handleSignup(event) {
+      event.preventDefault();
+      alert('Account created successfully');
+      window.location.href = "chat.html";
+    }
+  </script>
+
+</body>
+</html>

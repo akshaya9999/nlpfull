@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | Sentiment Trends</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    ::-webkit-scrollbar { display: none; }
+    body { scrollbar-width: none; }
+  </style>
+</head>
+<body class="relative h-screen flex text-gray-800 overflow-x-hidden">
+
+  <!-- Vanta Background -->
+  <div id="vanta-bg" class="fixed top-0 left-0 w-full h-full -z-10"></div>
+
+  <!-- Sidebar Toggle (visible on small screens) -->
+  <button id="sidebarToggle" class="md:hidden fixed top-4 left-4 z-30 bg-black text-white px-3 py-2 rounded focus:outline-none shadow">
+    ☰
+  </button>
+
+  <!-- Sidebar -->
+<aside id="sidebar" class="w-64 bg-black text-white flex flex-col justify-between p-4 border-r border-gray-700 z-20 transform md:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out fixed md:static h-full">
+  <div>
+    <h2 class="text-2xl font-bold mb-4">📊 Dashboard</h2>
+    <hr class="border-gray-600 mb-6" />
+    <nav class="flex flex-col gap-4 mt-2">
+      <a href="chat.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">💬 Chatbot Page</a>
+      <a href="upload.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">📹 Video Upload Page</a>
+      <a href="dashboard.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">📈 Sentiment & Emotion Trends</a>
+      <a href="transcript.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">📝 Transcript and Analysis</a>
+    </nav>  
+  </div>
+
+ <!-- Logout Button -->
+<div class="mt-6">
+  <a href="home.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition text-center block">🔓 Logout</a>
+</div>
+
+</aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-6 z-10 space-y-8 overflow-x-hidden">
+    <header>
+      <h1 class="text-2xl font-semibold text-white">📈 Sentiment & Emotion Trends</h1>
+    </header>
+
+
+    <!-- Charts -->
+    <section class="grid md:grid-cols-2 gap-6">
+      <div class="bg-white p-4 rounded shadow w-full">
+        <h2 class="text-lg font-semibold mb-2">Sentiment Summary Over Videos</h2>
+        <div class="relative w-full aspect-[4/3]">
+          <canvas id="lineChart" class="absolute inset-0 w-full h-full"></canvas>
+        </div>
+      </div>
+      <div class="bg-white p-4 rounded shadow w-full">
+        <h2 class="text-lg font-semibold mb-2">Overall Sentiment</h2>
+        <div class="relative w-full aspect-square">
+          <canvas id="pieChart" class="absolute inset-0 w-full h-full"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white p-4 rounded shadow w-full">
+      <h2 class="text-lg font-semibold mb-2">Emotion Breakdown of Training Data</h2>
+      <div class="relative w-full aspect-[4/3]">
+        <canvas id="barChart" class="absolute inset-0 w-full h-full"></canvas>
+      </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="bg-white p-4 rounded shadow space-y-4">
+      <h2 class="text-lg font-semibold">Download Reports</h2>
+      <div class="flex flex-wrap gap-4">
+        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full sm:w-auto">Download PDF</button>
+        <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded w-full sm:w-auto">Download CSV</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    new Chart(document.getElementById('lineChart'), {
+      type: 'line',
+      data: {
+        labels: ['Vid1', 'Vid2', 'Vid3', 'Vid4', 'Vid5'],
+        datasets: [
+          { label: 'Positive', data: [12, 19, 13, 17, 22], borderColor: '#10B981', fill: false },
+          { label: 'Negative', data: [7, 11, 9, 14, 10], borderColor: '#EF4444', fill: false }
+        ]
+      }
+    });
+
+    new Chart(document.getElementById('pieChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Positive', 'Negative', 'Neutral'],
+        datasets: [{
+          data: [30, 25, 45],
+          backgroundColor: ['#00FF00', '#FF0000', '#0000FF']  
+        }]
+      }
+    });
+
+    new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Joy', 'Anger', 'Sadness', 'Fear', 'Surprise'],
+        datasets: [{
+          label: 'Count',
+          data: [20, 10, 15, 8, 12],
+          backgroundColor: '#6366F1'
+        }]
+      }
+    });
+  </script>
+
+  <!-- Vanta.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+  <script>
+    VANTA.GLOBE({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200,
+      minWidth: 200,
+      scale: 1.0,
+      scaleMobile: 1.0,
+      color: 0x3399ff,
+      backgroundColor: 0x000000
+    });
+  </script>
+
+  <!-- Sidebar Toggle -->
+  <script>
+    const toggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+    });
+  </script>
+</body>
+</html>

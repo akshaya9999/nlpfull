@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transcript & Analysis Viewer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Vanta & Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+</head>
+
+<body class="h-screen flex" id="vanta-bg">
+
+<!-- Sidebar Toggle (visible on small screens) -->
+<button id="sidebarToggle" class="md:hidden fixed top-4 left-4 z-30 bg-black text-white px-3 py-2 rounded focus:outline-none shadow">
+    ☰
+</button>
+
+<!-- Sidebar -->
+<aside id="sidebar" class="w-64 bg-black text-white flex flex-col justify-between p-4 border-r border-gray-700 z-20 transform md:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out fixed md:static h-full top-0 left-0">
+  <div>
+    <h2 class="text-2xl font-bold mb-4">📊 Dashboard</h2>
+    <hr class="border-gray-600 mb-6" />
+    <nav class="flex flex-col gap-4 mt-2">
+      <a href="chat.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">💬 Chatbot Page</a>
+      <a href="upload.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">📹 Video Upload Page</a>
+      <a href="dashboard.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">📈 Sentiment & Emotion Trends</a>
+      <a href="transcript.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">📝 Transcript and Analysis</a>
+    </nav>  
+  </div>
+
+ <!-- Logout Button -->
+<div class="mt-6">
+  <a href="home.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition text-center block">🔓 Logout</a>
+</div>
+
+</aside>
+
+<!-- Main Content -->
+<main class="flex-1 p-6 space-y-6 text-white overflow-y-auto">
+    <h1 class="text-2xl font-semibold">Transcript and Analysis Viewer</h1>
+
+    <!-- Video Dropdown -->
+    <div>
+      <label class="block font-medium mb-1">Select Video Source:</label>
+      <select id="videoSelect" class="w-full md:w-1/2 border px-4 py-2 rounded text-black">
+        <option value="video1">Education Reform Speech.mp4</option>
+        <option value="video2">Budget Announcement.mp4</option>
+        <option value="video3">Healthcare Policy Review.mp4</option>
+      </select>
+    </div>
+
+    <!-- Transcript Section -->
+    <div>
+      <label class="block text-lg font-semibold mb-2">Transcript of Video</label>
+      <div class="bg-white text-black p-4 rounded shadow max-h-96 overflow-y-auto leading-relaxed" id="transcriptBox">
+        <p>
+          <span class="text-green-600">The new education policy is very inclusive and forward-thinking.</span>
+          <span class="text-red-600"> However, it fails to address rural education infrastructure issues, which remain a major concern.</span>
+          <span class="text-blue-600"> It was announced on August 20 by the Education Minister and has sparked varied responses.</span>
+          <span class="text-green-600"> Many believe it could pave the way for a more equitable system.</span>
+          <span class="text-red-600"> Still, critics argue that implementation strategies are vague and underfunded.</span>
+          <span class="text-blue-600"> Media coverage has been extensive, with mixed public sentiment.</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Emotion Graph -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-lg font-semibold mb-2 text-black">Emotion Over Time</h2>
+      <canvas id="emotionGraph" height="100"></canvas>
+    </div>
+
+    <!-- Analysis Summary -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-lg font-semibold mb-2 text-black">Analysis Summary</h2>
+      <p class="text-black">The majority of the public reacted positively to the new education policy, citing student-centric reforms. However, some concerns remain about rural accessibility and funding.</p>
+    </div>
+
+    <!-- Overall Sentiment -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-lg font-semibold mb-2 text-black">Overall Sentiment</h2>
+      <p class="text-green-600 font-bold text-xl">Positive</p>
+    </div>
+</main>
+
+<!-- Emotion Graph Script -->
+<script>
+    const ctx = document.getElementById('emotionGraph').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00'],
+        datasets: [
+          { label: 'Positive', data: [2, 4, 5, 6, 5, 7], borderColor: 'green', fill: false },
+          { label: 'Negative', data: [1, 2, 3, 2, 2, 1], borderColor: 'red', fill: false },
+          { label: 'Neutral', data: [3, 3, 3, 4, 4, 3], borderColor: 'blue', fill: false }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+</script>
+
+<!-- Vanta JS Globe Background Script -->
+<script>
+    VANTA.GLOBE({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200,
+      minWidth: 200,
+      scale: 1.0,
+      scaleMobile: 1.0,
+      color: 0x3399ff,
+      backgroundColor: 0x000000
+    });
+</script>
+
+</body>
+</html>

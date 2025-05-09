@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Video Upload | Sentiment Analysis</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    body {
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="relative h-screen flex text-sm text-gray-800 bg-black">
+
+  <!-- Vanta Background -->
+  <div id="vanta-bg" class="absolute top-0 left-0 w-full h-full -z-10"></div>
+
+<!-- Sidebar Toggle (visible on small screens) -->
+<button id="sidebarToggle" class="md:hidden fixed top-4 left-4 z-30 bg-black text-white px-3 py-2 rounded focus:outline-none shadow">
+  ☰
+</button>
+
+<!-- Sidebar -->
+<aside id="sidebar" class="w-64 bg-black text-white flex flex-col justify-between p-4 border-r border-gray-700 z-20 transform md:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out fixed md:static h-full">
+<div>
+  <h2 class="text-2xl font-bold mb-4">📊 Dashboard</h2>
+  <hr class="border-gray-600 mb-6" />
+  <nav class="flex flex-col gap-4 mt-2">
+    <a href="chat.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">💬 Chatbot Page</a>
+    <a href="upload.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">📹 Video Upload Page</a>
+    <a href="dashboard.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">📈 Sentiment & Emotion Trends</a>
+    <a href="transcript.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition">📝 Transcript and Analysis</a>
+  </nav>  
+</div>
+
+<!-- Logout Button -->
+<div class="mt-6">
+<a href="home.html" class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded text-base md:text-lg transition text-center block">🔓 Logout</a>
+</div>
+
+</aside>
+
+  <!-- Main content area -->
+  <div class="flex-1 flex flex-col ml-0 overflow-y-auto">
+
+    <!-- Header -->
+    <header class="bg-black text-white p-4 shadow relative z-10">
+      <h1 class="text-xl md:text-2xl font-semibold">📹 Video Upload – Sentiment Analysis</h1>
+    </header>
+
+    <!-- Main Section -->
+    <main class="flex-1 px-4 py-6 sm:px-6 md:px-8 lg:px-16 max-w-4xl mx-auto w-full space-y-8 relative z-10">
+
+      <!-- Upload Form -->
+      <section class="bg-white rounded-lg shadow-md p-6 sm:p-8 space-y-6">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Upload a Video</h2>
+
+        <div>
+          <label class="block font-medium mb-2 text-gray-700">Choose a video file</label>
+          <input type="file" accept="video/*" class="w-full border border-gray-300 rounded px-4 py-2 text-sm sm:text-base" />
+        </div>
+
+        <div>
+          <label class="block font-medium mb-2 text-gray-700">Or enter a YouTube link</label>
+          <input type="url" placeholder="https://youtube.com/..." class="w-full border border-gray-300 rounded px-4 py-2 text-sm sm:text-base" />
+        </div>
+
+        <button onclick="simulateUpload()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded transition text-sm sm:text-base">
+          Upload
+        </button>
+
+        <div id="progressWrapper" class="hidden mt-4">
+          <label class="block text-gray-700 mb-1">Processing Status</label>
+          <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+            <div id="progressBar" class="h-4 bg-blue-500 text-xs text-white text-center transition-all duration-500 ease-in-out" style="width: 0%">0%</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Previous Uploads -->
+      <section class="bg-white rounded-lg shadow-md p-6 sm:p-8 space-y-4">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Previous Uploads</h2>
+        <ul class="divide-y divide-gray-200 text-sm text-gray-700">
+          <li class="py-2 flex justify-between">
+            <span>budget_policy_2024.mp4</span>
+            <span class="text-green-600 font-medium">Analyzed ✅</span>
+          </li>
+          <li class="py-2 flex justify-between">
+            <span>youtube.com/watch?v=xyz</span>
+            <span class="text-yellow-600 font-medium">In Progress ⏳</span>
+          </li>
+          <li class="py-2 flex justify-between">
+            <span>health_reforms.mov</span>
+            <span class="text-red-600 font-medium">Failed ❌</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Transcript Section -->
+    <div>
+      <label class="block text-lg font-semibold mb-2 text-white">Transcript of Video</label>
+      <div class="bg-white text-black p-4 rounded shadow max-h-96 overflow-y-auto leading-relaxed" id="transcriptBox">
+        <p>
+          <span class="text-green-600">The new education policy is very inclusive and forward-thinking.</span>
+          <span class="text-red-600"> However, it fails to address rural education infrastructure issues, which remain a major concern.</span>
+          <span class="text-blue-600"> It was announced on August 20 by the Education Minister and has sparked varied responses.</span>
+          <span class="text-green-600"> Many believe it could pave the way for a more equitable system.</span>
+          <span class="text-red-600"> Still, critics argue that implementation strategies are vague and underfunded.</span>
+          <span class="text-blue-600"> Media coverage has been extensive, with mixed public sentiment.</span>
+          <span class="text-green-600">The new education policy is very inclusive and forward-thinking.</span>
+          <span class="text-red-600"> However, it fails to address rural education infrastructure issues, which remain a major concern.</span>
+          <span class="text-blue-600"> It was announced on August 20 by the Education Minister and has sparked varied responses.</span>
+          <span class="text-green-600"> Many believe it could pave the way for a more equitable system.</span>
+          <span class="text-red-600"> Still, critics argue that implementation strategies are vague and underfunded.</span>
+          <span class="text-blue-600"> Media coverage has been extensive, with mixed public sentiment.</span>
+          <span class="text-green-600">The new education policy is very inclusive and forward-thinking.</span>
+          <span class="text-red-600"> However, it fails to address rural education infrastructure issues, which remain a major concern.</span>
+          <span class="text-blue-600"> It was announced on August 20 by the Education Minister and has sparked varied responses.</span>
+          <span class="text-green-600"> Many believe it could pave the way for a more equitable system.</span>
+          <span class="text-red-600"> Still, critics argue that implementation strategies are vague and underfunded.</span>
+          <span class="text-blue-600"> Media coverage has been extensive, with mixed public sentiment.</span>
+        </p>
+      </div>
+    </div>
+
+    </main>
+  </div>
+
+  <!-- Upload Progress Script -->
+  <script>
+    function simulateUpload() {
+      const wrapper = document.getElementById('progressWrapper');
+      const bar = document.getElementById('progressBar');
+      wrapper.classList.remove('hidden');
+      bar.style.width = '0%';
+      bar.textContent = '0%';
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        if (progress >= 100) {
+          clearInterval(interval);
+          bar.textContent = 'Completed ✅';
+        } else {
+          progress += 10;
+          bar.style.width = `${progress}%`;
+          bar.textContent = `${progress}%`;
+        }
+      }, 400);
+    }
+
+    // Sidebar toggle functionality
+    document.getElementById('sidebarToggle').addEventListener('click', () => {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('-translate-x-full');
+    });
+  </script>
+
+  <!-- Vanta.js Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+  <script>
+    VANTA.GLOBE({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00,
+      color: 0x0066ff,
+      backgroundColor: 0x000000
+    });
+  </script>
+</body>
+</html>
